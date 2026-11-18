@@ -1,45 +1,50 @@
-// ============================================================
-// Prática 3 — Estado vazio da lista
-// Disciplina: Desenvolvimento Mobile (2026.2.DM) — CESAR School
-//
-// Toda lista tem ListEmptyComponent. Sem exceção.
-// E o texto do estado vazio precisa AJUDAR o usuário:
-//   - primeiro acesso → o que ele pode fazer
-//   - busca sem resultado → o que ele pode tentar
-// ============================================================
+import { Feather } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { cores, espaco, tipografia } from '../theme';
+import { useTheme } from '../context/theme-context';
+import { espaco, tipografia } from '../theme';
+import { NeonCard } from './cyber-ui';
 
 type ListaVaziaProps = {
-  // TODO P3.12: uma prop que permita distinguir "primeiro acesso" de "busca sem resultado".
-  termoBusca?: string;
+  termoBusca: string;
 };
 
 export function ListaVazia({ termoBusca }: ListaVaziaProps) {
-  // TODO P3.13: dois textos diferentes, conforme o cenário.
-  const texto = termoBusca && termoBusca.trim() !== ''
-    ? `Nenhum pet encontrado para '${termoBusca}'.`
-    : 'Nenhum pet cadastrado. Que tal adicionar um?';
+  const { colors } = useTheme();
+  const searching = termoBusca.trim().length > 0;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.texto}>
-        {texto}
-      </Text>
-    </View>
+    <NeonCard accent="accent" style={styles.card}>
+      <Feather color={colors.accent} name={searching ? 'search' : 'heart'} size={28} />
+      <View style={styles.copy}>
+        <Text style={[styles.title, { color: colors.text }]}>
+          {searching ? 'Nenhum sinal encontrado' : 'Sua base pet está vazia'}
+        </Text>
+        <Text style={[styles.body, { color: colors.muted }]}>
+          {searching
+            ? `Não há pets com “${termoBusca.trim()}”. Tente outro nome.`
+            : 'Cadastre seu primeiro companheiro para iniciar a rotina.'}
+        </Text>
+      </View>
+    </NeonCard>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    // TODO P3.14: centralize e use padding generoso
+  card: {
     alignItems: 'center',
     padding: espaco.xl,
   },
-  texto: {
+  copy: {
+    alignItems: 'center',
+    gap: espaco.xs,
+  },
+  title: {
+    ...tipografia.subtitulo,
+    textAlign: 'center',
+  },
+  body: {
     ...tipografia.corpo,
-    color: cores.textoFraco,
     textAlign: 'center',
   },
 });

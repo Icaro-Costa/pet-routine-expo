@@ -1,83 +1,120 @@
-// ============================================================
-// Prática 2 — Card do pet em destaque
-// Disciplina: Desenvolvimento Mobile (2026.2.DM) — CESAR School
-//
-// Usa o Card reutilizável e os tipos do domínio.
-// Mostra: nome, espécie + status do passeio (um em cada ponta), idade.
-// Oferece uma ação "Registrar passeio".
-//
-// Componentes permitidos: View, Text (dos 7 da aula).
-//   Ação de toque via onPress do Text, não Touchable*.
-// ============================================================
-import { StyleSheet, Text, View } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { Image } from 'expo-image';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { type Pet, rotuloEspecie, rotuloStatusPasseio } from '../types/pet';
-import { cores, espaco, tipografia } from '../theme';
+import { useTheme } from '../context/theme-context';
+import { espaco, raio, tipografia } from '../theme';
+import type { Pet } from '../types/pet';
+import { rotuloEspecie, rotuloPorte, rotuloStatusPasseio } from '../types/pet';
 import { Card } from './card';
+import { StatusPill } from './cyber-ui';
 
 type CardPetProps = {
   pet: Pet;
-  aoRegistrarPasseio: () => void;
+  onPress: () => void;
 };
 
-export function CardPet({ pet, aoRegistrarPasseio }: CardPetProps) {
+function statusTone(status: Pet['statusPasseio']): 'warning' | 'success' | 'danger' {
+  switch (status) {
+    case 'pendente':
+      return 'warning';
+    case 'concluido':
+      return 'success';
+    case 'cancelado':
+      return 'danger';
+  }
+}
+
+export function CardPet({ pet, onPress }: CardPetProps) {
+  const { colors } = useTheme();
+
   return (
-    <Card>
-      {/* TODO P3.25: miniatura com expo-image. */}
-      {/* TODO P3.26: contentFit="cover" preenche a caixa sem distorcer e oculta partes que sobram,
-                enquanto "contain" deixaria faixas vazias. */}
-      {pet.fotoUri ? (
-        <Image
-          source={{ uri: pet.fotoUri }}
-          style={styles.miniatura}
-          contentFit="cover"
-          recyclingKey={pet.id}
-          transition={200}
-        />
-      ) : (
-        <View style={[styles.miniatura, styles.miniaturaVazia]} />
-      )}
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Abrir prontuário de ${pet.nome}`}
+      onPress={onPress}
+      style={({ pressed }) => [styles.pressable, pressed && styles.pressed]}
+    >
+      <Card destacado={pet.statusPasseio === 'pendente'}>
+        <View style={styles.header}>
+          {pet.fotoUri ? (
+            <Image
+              source={{ uri: pet.fotoUri }}
+              style={[styles.avatar, { borderColor: colors.primary }]}
+              contentFit="cover"
+              recyclingKey={pet.id}
+              transition={200}
+            />
+          ) : (
+            <View style={[styles.avatar, styles.avatarFallback, { backgroundColor: colors.surfaceAlt, borderColor: colors.primary }]}>
+              <Feather color={colors.primary} name="heart" size={24} />
+            </View>
+          )}
 
-      <Text style={tipografia.titulo}>{pet.nome}</Text>
+          <View style={styles.identification}>
+            <Text numberOfLines={1} style={[styles.name, { color: colors.text }]}>{pet.nome}</Text>
+            <Text style={[styles.meta, { color: colors.muted }]}>
+              {rotuloEspecie(pet.especie)} · {rotuloPorte(pet.porte)}
+            </Text>
+            <Text style={[styles.meta, { color: colors.textMuted }]}>{pet.idadeMeses} meses</Text>
+          </View>
+        </View>
 
-      <View style={styles.linha}>
-        <Text style={tipografia.corpo}>{rotuloEspecie(pet.especie)}</Text>
-        <Text style={tipografia.corpo}>{rotuloStatusPasseio(pet.statusPasseio)}</Text>
-      </View>
-
-      <Text style={tipografia.legenda}>{pet.idadeMeses} meses</Text>
-
-      {/* TODO P3.27: latitude e longitude de forma legível. */}
-      {pet.local && (
-        <Text style={tipografia.corpo}>
-          Local: {pet.local.latitude.toFixed(3)}, {pet.local.longitude.toFixed(3)} (±{Math.round(pet.local.precisaoMetros)}m)
-        </Text>
-      )}
-
-      <Text style={styles.botao} onPress={aoRegistrarPasseio}>Registrar passeio</Text>
-    </Card>
+        <View style={styles.footer}>
+          <StatusPill tone={statusTone(pet.statusPasseio)}>{rotuloStatusPasseio(pet.statusPasseio)}</StatusPill>
+          <View style={styles.openDetail}>
+            <Text style={[styles.openText, { color: colors.secondary }]}>ver prontuário</Text>
+            <Feather color={colors.secondary} name="arrow-up-right" size={16} />
+          </View>
+        </View>
+      </Card>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  linha: {
+  pressable: {
+    borderRadius: raio.lg,
+  },
+  pressed: {
+    opacity: 0.78,
+  },
+  header: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: espaco.md,
+  },
+  avatar: {
+    borderRadius: raio.md,
+    borderWidth: 1,
+    height: 72,
+    width: 72,
+  },
+  avatarFallback: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  identification: {
+    flex: 1,
+    gap: espaco.xs,
+  },
+  name: {
+    ...tipografia.subtitulo,
+  },
+  meta: {
+    ...tipografia.legenda,
+  },
+  footer: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: espaco.sm,
   },
-  botao: {
-    marginTop: espaco.md,
-    fontWeight: 'bold',
-    color: cores.primaria,
+  openDetail: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: espaco.xs,
   },
-  miniatura: {
-    width: '100%',
-    height: 120,
-    borderRadius: espaco.sm,
-    marginBottom: espaco.sm,
-  },
-  miniaturaVazia: {
-    backgroundColor: cores.fundo,
+  openText: {
+    ...tipografia.etiqueta,
   },
 });
