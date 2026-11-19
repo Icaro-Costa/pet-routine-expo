@@ -1,67 +1,41 @@
-# Relatório de Uso de Inteligência Artificial — Mini-Projeto (Unidade 2)
+# Registro de uso de inteligência artificial
 
-> **Disciplina:** Desenvolvimento Mobile (2026.2.DM) — CESAR School  
-> **Projeto:** App de Gestão e Rotina Pet (`pet-routine-expo`)  
-> **Estudante:** ____________________________________________________  
-> **Data:** ____/____/2026
+Projeto: Pet Routine — Desenvolvimento Mobile, CESAR School.
 
----
+Data de implementação: 18/11/2026.
 
-## 1. Declaração Obrigatória (Política de Governança de IA do CESAR)
+Este documento é um registro técnico preliminar. O estudante deve preencher sua identificação, conferir a ferramenta/modelo com o catálogo da instituição e revisar a declaração antes de entregar. Ele não constitui assinatura nem declaração de revisão pessoal do estudante.
 
-> ⚠️ **Preenchimento obrigatório.** Caso não tenha utilizado nenhuma ferramenta de IA em nenhuma etapa do mini-projeto, assinale a opção correspondente abaixo e justifique na Seção 2.
+## Uso nesta implementação
 
-- [ ] **Utilizei** ferramenta(s) de Inteligência Artificial constante(s) no Catálogo de IA do CESAR e preenchi a declaração narrativa e a curadoria técnica abaixo.
-- [ ] **NÃO utilizei** nenhuma ferramenta de Inteligência Artificial no desenvolvimento, refatoração de UI/UX ou documentação deste mini-projeto.
+Foi utilizado o assistente Codex para inspecionar o repositório e o enunciado, implementar código, ajustar a interface cyberpunk e executar verificações. A versão exata do modelo deve ser conferida no histórico da sessão. Não foi verificado o enquadramento da ferramenta no catálogo institucional.
 
-### Texto da Declaração Oficial
+| Etapa | Apoio utilizado | Aproveitamento e verificação |
+| --- | --- | --- |
+| 1 — Rotas e fotos | Migração para Expo Router e captura/galeria | Rotas e tratamento de cancelamento; revisão dos estados de erro |
+| 2 — Navegação e notificações | Abas, detalhe e lembrete local | Listeners com cleanup e notificação em cinco segundos; teste em aparelho pendente |
+| 3 — Estado e persistência | Tema, Zustand, cronômetro e SQLite | Tipagem e cleanup revisados; persistência nativa precisa de teste em aparelho |
+| 4 — Backend e sessão | Cliente HTTP, autenticação e CRUD | Contrato comparado com o backend e TypeScript verificado |
+| 5 — UI e build | Estilo cyberpunk, controles nativos e configurações | Interface e configurações implementadas; build de distribuição e OTA dependem da conta EAS |
+| Reformulação visual | Tokens, cartões, botões e estados de tela | Temas claro/escuro; capturas reais antes/depois pendentes |
 
-> *"Declaro que utilizei a(s) ferramenta(s) de Inteligência Artificial **[informar nome e versão do modelo/ferramenta, conforme constante no Catálogo de IA do CESAR]** nesta atividade, com a finalidade de gerar um rascunho sobre **[informar temas/etapas: ex. estrutura de navegação com Expo Router, integração Zustand + API, refatoração de componentes com GlueStack UI e NativeWind]**, sobre o qual realizei análise crítica (curadoria) das informações apresentadas. Não tratei dados pessoais no uso desta ferramenta. Revisei criticamente o conteúdo gerado, identificando seus acertos e eventuais imprecisões, e assumo a responsabilidade integral pela versão final apresentada."*
+## Curadoria técnica observada
 
----
+1. O código inicialmente gerado usou `StyleSheet.absoluteFillObject`. O TypeScript da versão instalada de React Native rejeitou essa propriedade e indicou `absoluteFill`; a implementação foi corrigida em `src/components/cyber-ui.tsx`.
+2. A primeira versão do botão compartilhado envolvia qualquer conteúdo em `Text`, incluindo uma composição com `View`. A revisão identificou o problema de composição e separou conteúdo textual de conteúdo composto.
+3. A primeira versão da tela de foto apresentava erros de rede ao salvar como “galeria bloqueada”. A revisão separou erros operacionais dos estados de permissão, corrigindo a orientação ao usuário.
 
-## 2. Registro de Uso por Etapa do Mini-Projeto
+Esses casos descrevem ocorrências desta implementação. Não se atribuem ao assistente exemplos hipotéticos de APIs depreciadas que não apareceram no código gerado.
 
-Liste todas as interações relevantes realizadas com ferramentas de IA durante o desenvolvimento das Etapas 1 a 5 e na reformulação de UI/UX.
+## Declaração a revisar pelo estudante
 
-| # | Etapa do Mini-Projeto | Ferramenta e Versão | Finalidade / Resumo do Prompt | O que foi aproveitado? | O que precisou ser corrigido ou descartado? |
-|---|---|---|---|---|---|
-| 1 | *(Ex.: Etapa 1 — Expo Router + Image Picker)* | *(Ex.: ChatGPT GPT-4o / Claude 3.7 Sonnet / Gemini 2.5 Pro)* | | | |
-| 2 | *(Ex.: Etapa 2 — Drawer, Tabs, `[id]` e Notificações)* | | | | |
-| 3 | *(Ex.: Etapa 3 — Hooks, Zustand, `AsyncStorage` e `expo-sqlite`)* | | | | |
-| 4 | *(Ex.: Etapa 4 — Auth com `sessionToken` e CRUD no Backend)* | | | | |
-| 5 | *(Ex.: Etapa 5 — UI/UX com GlueStack/NativeWind, `@expo/ui`, OTA e EAS)* | | | | |
+Identificação dos integrantes: a preencher pelo grupo.
 
----
+Ferramenta/modelo conforme o catálogo institucional: a conferir pelo grupo.
 
-## 3. Análise Crítica e Curadoria Técnica (Acertos, Erros e Alucinações)
+Após revisar o código e os testes, o estudante deve redigir/confirmar a declaração narrativa exigida pelo enunciado, incluindo finalidade, curadoria e responsabilidade pela entrega. A confirmação sobre dados pessoais e compreensão integral do código deve ser feita pelo próprio estudante; o assistente não a atesta em seu nome.
 
-Modelos de linguagem frequentemente sugerem APIs depreciadas do ecossistema React Native / Expo (como `@react-navigation/*` manual em vez de `expo-router`, `ImagePicker.MediaTypeOptions.Images` em vez de `['images']`, `result.cancelled` com dois "L", `shadow*`/`elevation` em vez de `boxShadow`, ou mutação direta de arrays).
-
-Responda com base no que aconteceu durante o desenvolvimento do seu grupo:
-
-### 3.1. Principais Acertos da Ferramenta
-*(Onde a IA realmente economizou tempo sem comprometer a arquitetura da disciplina?)*
-
-________________________________________________________________________________
-________________________________________________________________________________
-
-### 3.2. Imprecisões, Código Desatualizado ("Zumbis") ou Violações das Regras da Disciplina
-*(Cite pelo menos **dois** trechos ou sugestões geradas pela IA que violavam as 20 regras de escrita da disciplina ou usavam APIs antigas do Expo SDK, mostrando o que a IA sugeriu vs. como você corrigiu.)*
-
-1. **Problema identificado na sugestão da IA:**
-   - **O que a IA gerou:** `________________________________________________________`
-   - **Por que estava incorreto/desatualizado:** `____________________________________`
-   - **Como corrigimos no código final:** `__________________________________________`
-
-2. **Problema identificado na sugestão da IA:**
-   - **O que a IA gerou:** `________________________________________________________`
-   - **Por que estava incorreto/desatualizado:** `____________________________________`
-   - **Como corrigimos no código final:** `__________________________________________`
-
----
-
-## 4. Confirmação de Proteção de Dados e Autoria
-
-- [ ] Confirmo que **nenhum dado pessoal ou sensível** (próprio, de colegas ou de terceiros) nem chaves privadas reais foram inseridos nos prompts enviados às ferramentas de IA.
-- [ ] Confirmo que compreendo integralmente o funcionamento de cada arquivo entregue na branch e sou capaz de explicar e modificar qualquer trecho durante a arguição/avaliação.
+- [ ] Conferi a ferramenta e sua versão no catálogo institucional.
+- [ ] Revisei o uso de dados nos prompts e completei a declaração de proteção de dados.
+- [ ] Revisei o código, executei os testes em aparelho e compreendo os arquivos entregues.
+- [ ] Preenchi a identificação e assinei a declaração final.
